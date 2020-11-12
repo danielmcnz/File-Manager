@@ -1,28 +1,46 @@
-CC = g++
+.SUFFIXES:
+
+CC = clang++
 
 # -g	adds debugging information to the executable file
 # -Wall turns on most, but not all, compiler warnings
-CFLAGS = -g -Wall
+CFLAGS = --std=c++17 -g -Wall
 
-INC=/FileManager/include/
+INC=-IFileManager/include/
 
 VPATH = FileManager/src
 
-OBJECTS = $(VPATH)/emlreader/EMLReader.o Search.o main.o
+CPP_FILES := $(wildcard $(VPATH)/*/*.cpp)
+OBJ_FILES := $(patsubst $(VPATH)/%,build/%,$(CPP_FILES:.cpp=.o))
 
-BUILDDIR = build
+TARGET = test
 
-define cc-command
-$(CC) $(INC) $< -o $@
-endef
+.PHONY: all clean
 
-all: FileManager
+all: $(TARGET) $(CPP_FILES)
 
-%.o: %.cpp
-	$(cc-command)
+$(OBJ_FILES): build/%.o: $(VPATH)/%.cpp $(CPP_FILES)
 
-FileManager: $(OBJECTS)
-	$(CC) $(CFLAGS) $? -o $@
+$(TARGET): $(OBJ_FILES)
+	mkdir "build/emlreader"
+	mkdir "build/search"
+	$(CC) $(CC_FLAGS) $(INC) -o $@ $<
 
-clean:
-	$(RM) $(TARGET) *.o *~
+# build/%.o: src/%.cpp
+# 	mkdir -p $(dir $@)
+# 	$(CC) $(CC_FLAGS) $(INC) -c -o $@ $<
+
+# define cc-command
+# $(CC) $(INC) $< -o $@
+# endef
+
+# all: FileManager
+
+# %.o: %.cpp
+# 	$(cc-command)
+
+# FileManager: $(OBJECTS)
+# 	$(CC) $(CFLAGS) $? -o $@
+
+# clean:
+# 	$(RM) $(TARGET) *.o *~

@@ -1,1 +1,7 @@
 *.o
+.vscode
+*.ilk
+*.pdb
+*.exe
+*.env
+Makefile
