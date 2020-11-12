@@ -1,4 +1,4 @@
-#include <Finder.h>
+#include <finder/Finder.h>
 
 #include <iostream>
 #include <string>
@@ -6,7 +6,7 @@
 
 int main()
 {
-	std::string path = "C:\\Users\\danie\\Desktop\\ExampleEmails\\";
+	std::string path = "/home/skyline/Desktop/Emails";
 	Search search(path);
 
 	EMLReader reader;
