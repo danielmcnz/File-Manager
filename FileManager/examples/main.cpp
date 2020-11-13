@@ -73,7 +73,7 @@ int main()
 		std::cout << file << std::endl;
 		std::cout << reader.GetSubject() << std::endl;
 
-		reader.SaveImages(EMLReader::Image::jpeg, "/home/skyline/Desktop/file");
+		reader.SaveImages(EMLReader::Image::jpeg, "/home/skyline/Desktop/SavedImages");
 
 		reader.CloseFile();
 	}

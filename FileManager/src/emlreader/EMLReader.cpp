@@ -182,12 +182,20 @@ EMLReader::Email EMLReader::GetRecipient()
 	return {"",""};
 }
 
-int EMLReader::SaveImages(Image imageType, std::string filename)
+int EMLReader::SaveImages(Image imageType, std::string filepath)
 {
 	std::ofstream savefile;
+	std::string filename;
 	std::vector<std::pair<Image, std::string>> images;
-	std::ifstream check;
 	int index = 0;
+
+	auto file_stat = fs::status(filepath);
+
+	if(!fs::is_directory(file_stat))
+	{
+		fs::create_directories(filepath);
+	}
+
 	switch(imageType)
 	{
 		case Image::jpeg:
@@ -195,13 +203,14 @@ int EMLReader::SaveImages(Image imageType, std::string filename)
 
 			for(int i=0;i<images.size();++i,++index)
 			{
-				filename = filename+std::to_string(index)+".jpeg";
-				// check.open(filename);
-				// check.close();
+				filename = filepath+"/file"+std::to_string(NextIndex(filepath, "file", ".jpeg"))+".jpeg";
 
 				savefile.open(filename);
 
-				savefile.write(images[i].second.c_str(), images[i].second.size());
+				auto base64_image = images[i].second;
+				std::string decoded_image = base64_decode(base64_image);
+
+				savefile.write(decoded_image.c_str(), decoded_image.size());
 				savefile.close();
 			}
 			break;
@@ -343,4 +352,25 @@ std::string EMLReader::ReadHTMLBody()
 	}
 
 	return bodyText;
+}
+
+int EMLReader::NextIndex(std::string filepath, std::string filename, std::string extension)
+{
+	std::ifstream file;
+	int index = 0;
+
+	while(true)
+	{
+		file.open(filepath+"/"+filename+std::to_string(index)+extension);
+		if(file.good())
+		{
+			file.close();
+			index++;
+		}
+		else
+		{
+			file.close();
+			return index;
+		}
+	}
 }

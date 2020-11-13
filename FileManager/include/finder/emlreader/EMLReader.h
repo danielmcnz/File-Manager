@@ -2,11 +2,15 @@
 
 #include <string>
 #include <fstream>
+#include <filesystem>
 
 #include <finder/utils/Line.h>
+#include <finder/encryption/base64.h>
 
 namespace finder
 {
+	namespace fs = std::filesystem;
+
 	class EMLReader
 	{
 	public:
@@ -63,12 +67,14 @@ namespace finder
 		std::string ReadHTMLBody();
 
 		/* Saves images in base64 format */
-		int SaveImages(Image imageType, std::string filename);
+		int SaveImages(Image imageType, std::string filepath);
 
 	private:
 		/* Returns array of Base64 encoded images
 			of selected image type */
 		std::vector<std::pair<Image, std::string>> ReadImages(Image imageType);
+
+		int NextIndex(std::string filepath, std::string filename, std::string extension);
 
 	private:
 		std::string filename;

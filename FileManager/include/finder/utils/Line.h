@@ -131,7 +131,6 @@ namespace finder
 
 	inline bool Line::endsWith(std::string end)
 	{
-		int max = 0;
 		int count = 0;
 		for (int i = line.size()-1,max=end.size()-1; count < end.size() ; --i, ++count, --max)
 		{
