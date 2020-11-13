@@ -7,7 +7,7 @@ Search::Search(std::string pathToSearch)
 	path(pathToSearch)
 {}
 
-std::vector<std::string> Search::FindFilesBySubject(std::string path, std::string fileSubject, std::vector<std::string> &files)
+std::vector<std::string> Search::FindFilesBySubject(std::string path, Line fileSubject, std::vector<std::string> &files)
 {
 	for (const auto& entry : fs::directory_iterator(path))
 	{
@@ -20,10 +20,21 @@ std::vector<std::string> Search::FindFilesBySubject(std::string path, std::strin
 			reader.OpenFile(entry.path().string());
 			Line subject;
 			subject.line = reader.GetSubject();
-			if (subject.contains(fileSubject))
+			if(fileSubject.startsWith("[") && fileSubject.endsWith("]"))
 			{
-				files.push_back(entry.path().string());
+				if (subject.toLower().line == fileSubject.toLower().popBack().popFront().line)
+				{
+					files.push_back(entry.path().string());
+				}
 			}
+			else
+			{
+				if (subject.toLower().contains(fileSubject.toLower().line))
+				{
+					files.push_back(entry.path().string());
+				}
+			}
+			
 			reader.CloseFile();
 		}
 	}

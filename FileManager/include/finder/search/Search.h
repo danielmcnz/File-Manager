@@ -19,7 +19,7 @@ namespace finder
 		Search(std::string pathToSearch);
 		~Search() = default;
 
-		std::vector<std::string> FindFilesBySubject(std::string path, std::string fileSubject, std::vector<std::string> &files);
+		std::vector<std::string> FindFilesBySubject(std::string path, Line fileSubject, std::vector<std::string> &files);
 		
 		std::vector<std::string> FindFilesByDate(std::string path, std::string date);
 

@@ -39,11 +39,25 @@ std::string EMLReader::GetSubject()
 	Line line;
 	while (std::getline(file, line.line))
 	{
-		if (line.contains("Subject:"))
+		if (line.startsWith("Subject:"))
 		{
-			return line.splitStr(' ')[1];
+			auto args = line.splitStr(' ');
+
+			if(args.size() == 1)
+			{
+				return "(no subject)";
+			}
+
+			std::string subject = args[1];
+			for(int i=2;i<args.size();++i)
+			{
+				subject += " " + args[i];
+			}
+			return subject;
 		}
 	}
+
+	return "";
 }
 
 std::string EMLReader::GetDate()
@@ -57,6 +71,11 @@ std::string EMLReader::GetDate()
 		if (line.contains("Date:"))
 		{
 			auto words = line.splitStr(' ');
+			if(words.size() == 1)
+			{
+				return "Cant find sender";
+			}
+
 			std::string date = words[1];
 			for (int i=2;i<words.size();++i)
 			{
@@ -65,6 +84,8 @@ std::string EMLReader::GetDate()
 			return date;
 		}
 	}
+
+	return "";
 }
 
 EMLReader::Email EMLReader::GetSender()
@@ -78,6 +99,16 @@ EMLReader::Email EMLReader::GetSender()
 		if (line.contains("From:"))
 		{
 			std::vector<std::string> lineArr = line.splitStr(' ');
+
+			if(lineArr.size() == 1)
+			{
+				return { "Can't find sender name", "Can't find sender email" };
+			}
+			else if(lineArr.size() == 2)
+			{
+				return { "Can't find sender name", lineArr[1] };
+			}
+
 			std::string name = lineArr[1];
 			int emailIndex = 0;
 			for (int i = 2; i < lineArr.size(); ++i)
@@ -100,6 +131,8 @@ EMLReader::Email EMLReader::GetSender()
 			return sender;
 		}
 	}
+
+	return {"",""};
 }
 
 EMLReader::Email EMLReader::GetRecipient()
@@ -113,6 +146,16 @@ EMLReader::Email EMLReader::GetRecipient()
 		if (line.contains("To:"))
 		{
 			std::vector<std::string> lineArr = line.splitStr(' ');
+
+			if(lineArr.size() == 1)
+			{
+				return { "Can't find recipient name", "Can't find recipient email" };
+			}
+			else if(lineArr.size() == 2)
+			{
+				return { "Can't find recipient name", lineArr[1] };
+			}
+
 			std::string name = lineArr[1];
 			int emailIndex = 0;
 			for (int i = 2; i < lineArr.size(); ++i)
@@ -135,6 +178,8 @@ EMLReader::Email EMLReader::GetRecipient()
 			return sender;
 		}
 	}
+
+	return {"",""};
 }
 
 std::vector<std::pair<EMLReader::Image, std::string>> EMLReader::ReadImages(Image imageType)

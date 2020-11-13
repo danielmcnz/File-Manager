@@ -1,7 +1,22 @@
+# Object Files #
+
 *.o
+
+# Settings #
+
 .vscode
+
+# Miscellaneous #
+
 *.ilk
 *.pdb
-*.exe
+
+# Configuration Files #
+
 *.env
-Makefile
+*.toml
+/Makefile
+
+# Binary Files #
+*.exe
+*.out

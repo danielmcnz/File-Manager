@@ -6,12 +6,20 @@
 #include <cstdlib>
 #include <fstream>
 
+using namespace finder;
+
 int main()
 {
 	std::fstream env(".env", std::ios::in);
 	
+	if(!env.is_open())
+	{
+		std::cout << "Failed to open .env file" << std::endl;
+		return 1;
+	}
+
 	std::string path;
-	std::string subject;
+	Line subject;
 	Line line;
 	while(std::getline(env, line.line))
 	{
@@ -27,6 +35,13 @@ int main()
 			{
 				subject += " " + args[i];
 			}
+			if(subject.startsWith("[") && subject.endsWith("]"))
+			{
+				if(subject == "[(no subject)]")
+				{
+					subject = "[]";
+				}
+			}
 		}
 	}
 
@@ -37,11 +52,27 @@ int main()
 	std::vector<std::string> files;
 	files = search.FindFilesBySubject(path, subject, files);
 
+	if(files.size() == 0)
+	{
+		std::cout << "Couldn't find any files with that subject" << std::endl;
+	}
+
 	for (std::string file : files)
 	{
-		std::cout << file << std::endl;
 		reader.OpenFile(file);
-		std::cout << reader.ReadPlainBody() << std::endl;
+
+		auto sender = reader.GetSender();
+
+		Line temp(sender.name);
+		if(temp.contains("bob"))
+		{
+			std::cout << file << std::endl;
+			std::cout << sender.name << std::endl;
+			std::cout << sender.email << std::endl;
+		}
+
+		std::cout << reader.GetSubject() << std::endl;
+
 		reader.CloseFile();
 	}
 
