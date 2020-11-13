@@ -15,7 +15,7 @@
 
 *.env
 *.toml
-/Makefile
+.Makefile
 
 # Binary Files #
 *.exe
