@@ -66,12 +66,14 @@ int main()
 		Line temp(sender.name);
 		if(temp.contains("bob"))
 		{
-			std::cout << file << std::endl;
 			std::cout << sender.name << std::endl;
 			std::cout << sender.email << std::endl;
 		}
 
+		std::cout << file << std::endl;
 		std::cout << reader.GetSubject() << std::endl;
+
+		reader.SaveImages(EMLReader::Image::jpeg, "/home/skyline/Desktop/file");
 
 		reader.CloseFile();
 	}

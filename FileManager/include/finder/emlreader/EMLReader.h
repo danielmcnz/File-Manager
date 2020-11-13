@@ -62,8 +62,10 @@ namespace finder
 		/* Returns html formatted body*/
 		std::string ReadHTMLBody();
 
+		/* Saves images in base64 format */
+		int SaveImages(Image imageType, std::string filename);
+
 	private:
-	public:
 		/* Returns array of Base64 encoded images
 			of selected image type */
 		std::vector<std::pair<Image, std::string>> ReadImages(Image imageType);

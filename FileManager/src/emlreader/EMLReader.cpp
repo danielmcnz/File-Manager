@@ -182,6 +182,36 @@ EMLReader::Email EMLReader::GetRecipient()
 	return {"",""};
 }
 
+int EMLReader::SaveImages(Image imageType, std::string filename)
+{
+	std::ofstream savefile;
+	std::vector<std::pair<Image, std::string>> images;
+	std::ifstream check;
+	int index = 0;
+	switch(imageType)
+	{
+		case Image::jpeg:
+			images = ReadImages(imageType);
+
+			for(int i=0;i<images.size();++i,++index)
+			{
+				filename = filename+std::to_string(index)+".jpeg";
+				// check.open(filename);
+				// check.close();
+
+				savefile.open(filename);
+
+				savefile.write(images[i].second.c_str(), images[i].second.size());
+				savefile.close();
+			}
+			break;
+		case Image::png:
+			break;
+	}
+
+	return 0;
+}
+
 std::vector<std::pair<EMLReader::Image, std::string>> EMLReader::ReadImages(Image imageType)
 {
 	file.clear();
@@ -193,13 +223,22 @@ std::vector<std::pair<EMLReader::Image, std::string>> EMLReader::ReadImages(Imag
 
 	Line line;
 	bool isImage = false;
+	int afterTag = 0;
 	while (std::getline(file, line.line))
 	{
 		if (isImage == true)
 		{
-			if (!line.startsWith("--00000000"))
+			if (!line.startsWith("--"))
 			{
-				cur_image += line.line;
+				if(afterTag == 4)
+				{
+					cur_image += line.line;
+				}
+				else
+				{
+					afterTag++;
+				}
+				
 			}
 			else
 			{
@@ -222,6 +261,7 @@ std::vector<std::pair<EMLReader::Image, std::string>> EMLReader::ReadImages(Imag
 					cur_imageType = Image::jpeg;
 					cur_image.clear();
 				}
+				break;
 			case Image::png:
 				if (line.contains("Content-Type: image/png"))
 				{
@@ -229,6 +269,7 @@ std::vector<std::pair<EMLReader::Image, std::string>> EMLReader::ReadImages(Imag
 					cur_imageType = Image::png;
 					cur_image.clear();
 				}
+				break;
 			}
 		}
 	}
