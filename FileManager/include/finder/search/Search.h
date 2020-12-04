@@ -21,9 +21,9 @@ namespace finder
 
 		std::vector<std::string> FindFilesBySubject(std::string path, Line fileSubject, std::vector<std::string> &files);
 		
-		std::vector<std::string> FindFilesByDate(std::string path, std::string date);
+		std::vector<std::string> FindFilesByDate(std::string path, std::string date, std::vector<std::string> &files);
 
-		std::vector<std::string> FindFilesBySender(std::string path, std::string sender);
+		std::vector<std::string> FindFilesBySender(std::string path, EMLReader::Email sender, std::vector<std::string> &files);
 
 	private:
 		EMLReader reader;

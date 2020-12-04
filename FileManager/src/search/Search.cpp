@@ -42,16 +42,21 @@ std::vector<std::string> Search::FindFilesBySubject(std::string path, Line fileS
 	return files;
 }
 
-std::vector<std::string> Search::FindFilesByDate(std::string path, std::string date)
+std::vector<std::string> Search::FindFilesByDate(std::string path, std::string date, std::vector<std::string> &files)
 {
 	/* No, I am in fact, not written */
 
 	return std::vector<std::string>();
 }
 
-std::vector<std::string> Search::FindFilesBySender(std::string path, std::string sender)
+std::vector<std::string> Search::FindFilesBySender(std::string path, EMLReader::Email sender,std::vector<std::string> &files)
 {
 	/* No, I am in fact, not written */
+
+	for (const auto& entry : fs::directory_iterator(path))
+	{
+		
+	}
 
 	return std::vector<std::string>();
 }
